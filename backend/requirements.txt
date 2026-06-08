@@ -1,0 +1,6 @@
+playwright
+requests
+fastapi[standard]
+bs4
+psycopg[binary]
+dotenv
