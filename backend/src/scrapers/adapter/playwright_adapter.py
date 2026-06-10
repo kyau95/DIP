@@ -13,7 +13,7 @@ class PlaywrightAdapter(BaseAdapater):
             "[class*='Cost']",
         ]
     
-    def scrape(self, url, browser_type="chromium", timeout=30000):
+    def scrape(self, url, browser_type="chromium"):
         """
         Scrape a URL using Playwright with anti-detection and JS rendering support.
         
@@ -46,7 +46,6 @@ class PlaywrightAdapter(BaseAdapater):
                 except:
                     print("Initial load timeout, continuing anyway...")
                 page.wait_for_timeout(3000)
-                
                 
                 found_price = None
                 for selector in self.price_selectors:
