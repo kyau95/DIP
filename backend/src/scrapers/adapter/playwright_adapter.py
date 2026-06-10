@@ -1,10 +1,16 @@
-import time
 from playwright.sync_api import sync_playwright
 from scrapers.adapter.base import BaseAdapater
 
 class PlaywrightAdapter(BaseAdapater):
     def __init__(self):
         super().__init__()
+        self.price_selectors = [
+            "//span[contains(text(), '$')]",
+            "[class*='price' i]",
+            "[data-seo-id='hero-price']",
+            ".price",
+            "[class*='Cost']",
+        ]
     
     def scrape(self, url, browser_type="chromium", timeout=30000):
         """
@@ -20,7 +26,8 @@ class PlaywrightAdapter(BaseAdapater):
         """
         try:
             with sync_playwright() as playwright:
-                browser_launcher = playwright.chromium if browser_type == "chromium" else playwright.firefox
+                browser_launcher = playwright.chromium if \
+                    browser_type == "chromium" else playwright.firefox
                 browser = browser_launcher.launch(
                     headless=True,
                     args=["--disable-blink-features=AutomationControlled"],
@@ -38,16 +45,10 @@ class PlaywrightAdapter(BaseAdapater):
                 except:
                     print("Initial load timeout, continuing anyway...")
                 page.wait_for_timeout(3000)
-                price_selectors = [
-                    "//span[contains(text(), '$')]",
-                    "[class*='price' i]",
-                    "[data-seo-id='hero-price']",
-                    ".price",
-                    "[class*='Cost']",
-                ]
+                
                 
                 found_price = None
-                for selector in price_selectors:
+                for selector in self.price_selectors:
                     try:
                         locator = page.locator(selector)
                         if locator.count() > 0:
@@ -75,8 +76,8 @@ class PlaywrightAdapter(BaseAdapater):
                 return {
                     "url": url,
                     "price": found_price,
-                    "title": page_title,
-                    "status": "success" if found_price else "passed_with_exception"
+                    "status": "success" if found_price else "no_price_found",
+                    "error": None
                 }
         
         except Exception as e:
@@ -84,7 +85,6 @@ class PlaywrightAdapter(BaseAdapater):
             return {
                 "url": url,
                 "price": None,
-                "error": str(e),
-                "status": "error"
+                "status": "error",
+                "error": str(e)
             }
-

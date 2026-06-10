@@ -50,18 +50,29 @@ class BaseAdapater:
         
         return None
 
-    def scrape(self, url: str) -> str | None:
+    def scrape(self, url: str) -> dict:
         """
         Generic implementation:
             Scrapes price from target URL using multiple strategies.
             Searches for common price indicators and patterns.
-            Returns the price string if found, otherwise returns None.
+            Returns a dictionary with price, status, and error information.
         """
         try:
             response = requests.get(url, headers=self.header, timeout=10)
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
-            return self._find_price_element(soup)
+            price = self._find_price_element(soup)
+            return {
+                "url": url,
+                "price": price,
+                "status": "success" if price else "no_price_found",
+                "error": None
+            }
         except requests.RequestException as e:
             print(f"Error scraping {url}: {e}")
-            return None
+            return {
+                "url": url,
+                "price": None,
+                "status": "error",
+                "error": str(e)
+            }
