@@ -1,3 +1,5 @@
+import re
+
 from playwright.sync_api import sync_playwright
 from scrapers.adapter.base import BaseAdapater
 
@@ -5,10 +7,9 @@ class PlaywrightAdapter(BaseAdapater):
     def __init__(self):
         super().__init__()
         self.price_selectors = [
+            ".price",
             "//span[contains(text(), '$')]",
             "[class*='price' i]",
-            "[data-seo-id='hero-price']",
-            ".price",
             "[class*='Cost']",
         ]
     
@@ -52,7 +53,10 @@ class PlaywrightAdapter(BaseAdapater):
                     try:
                         locator = page.locator(selector)
                         if locator.count() > 0:
-                            found_price = locator.first.inner_text(timeout=5000)
+                            found_price = re.search(
+                                self.price_pattern, 
+                                locator.first.inner_text(timeout=5000)
+                            ).group(0)
                             print(f"Found price with selector '{selector}': {found_price}")
                             break
                     except Exception as e:
