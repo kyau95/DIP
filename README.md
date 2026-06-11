@@ -58,6 +58,19 @@ Containerize the project in Docker for consistent environments.
                  └─────────────────┘
 ```
 
+Relational database diagram
+```
+products
+   │
+   ├───────────────┐
+   │               │
+   ▼               ▼
+price_history    alerts
+   │
+   ▼
+scrape_jobs
+```
+
 
 ### Phase 2: Attach a UI to the app
 
