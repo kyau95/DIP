@@ -49,6 +49,18 @@ class BaseAdapater:
             return price.group(0)
         
         return None
+    
+    
+    def _find_product_name(self, soup: BeautifulSoup) -> str | None:
+        """
+        Product names are usually always an h1 tag
+        Find the first h1 element and return it otherwise None
+        """
+        elem = soup.find("h1")
+        if elem:
+            return elem.get_text().strip()
+        return None
+        
 
     def scrape(self, url: str) -> dict:
         """
@@ -62,9 +74,11 @@ class BaseAdapater:
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
             price = self._find_price_element(soup)
+            product_name = self._find_product_name(soup)
             return {
                 "url": url,
                 "price": price,
+                "product_name": product_name,
                 "status": "success" if price else "no_price_found",
                 "error": None
             }
@@ -73,6 +87,7 @@ class BaseAdapater:
             return {
                 "url": url,
                 "price": None,
+                "product_name": None,
                 "status": "error",
                 "error": str(e)
             }

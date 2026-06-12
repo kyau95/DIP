@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from uuid import UUID, uuid4
 
-from database.models.base_model import BaseModel
+from .base_model import BaseModel
 
 
 class Product(BaseModel):
@@ -56,3 +56,12 @@ class Product(BaseModel):
         onupdate=datetime.utcnow,
         nullable=False,
     )
+    
+    def __repr__(self) -> str:
+        return (
+            f"Product(\n"
+            f"  Id = {self.id}\n"
+            f"  Name = {self.product_name}\n"
+            f"  Retailer = {self.retailer}\n"
+            f")"
+        )

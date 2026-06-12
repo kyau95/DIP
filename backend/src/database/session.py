@@ -1,5 +1,5 @@
 from dotenv import dotenv_values
-from models import Product
+from .models import Product
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker

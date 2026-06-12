@@ -1,11 +1,20 @@
 import sys
 import os
 
-# Add src directory to Python path
+# Add src directory to Python path before imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from scrapers.adapter.base import BaseAdapater
-from scrapers.adapter.playwright_adapter import PlaywrightAdapter
+from database.models import Product, PriceHistory
+from database import SessionLocal
+
+from scrapers.adapter import BaseAdapater, PlaywrightAdapter
+
+from sqlalchemy import select
+
+from urllib.parse import urlparse
+
+from pprint import pprint
+
 
 if __name__ == "__main__":
     base = BaseAdapater()
@@ -16,6 +25,39 @@ if __name__ == "__main__":
         # "https://www.walmart.com/ip/GameSir-T7-Wired-Controller-Xbox-Series-X-S-Xbox-One-Windows-10-11-Plug-Play-Gaming-Gamepad-Hall-Effect-Joysticks-Hall-Trigger-White-Version/9374812633?classType=VARIANT&adsRedirect=true",
         # "https://www.target.com/p/audio-technica-ath-wp900-on-ear-headphones-flamed-maple/-/A-1001263584#lnk=sametab"
     ]
+    
+    db = SessionLocal()
+    
     for url in urls:
-        print(play_adapter.scrape(url))
-        print(base.scrape(url))
+        retailer_name = urlparse(url).hostname.split(".")[1]
+        print(retailer_name)
+                
+        # print(play_adapter.scrape(url))
+        ret = base.scrape(url)
+        
+        # Test insert
+        # When adding a product, have to add the price at the same time 
+        try:
+            product = Product(
+                retailer=retailer_name,
+                product_name=ret["product_name"],
+                product_url=url
+            )
+            ph = PriceHistory(
+                
+            )
+            db.add(product)
+            db.commit()
+            db.refresh()
+        except Exception as e:
+            print(e)
+        
+    # Test select
+    stmts = select(Product)
+    products = db.scalars(stmts).all()
+    
+    for p in products:
+        print(p)
+        
+    
+    db.close()

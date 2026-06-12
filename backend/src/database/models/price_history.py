@@ -6,7 +6,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from uuid import UUID, uuid4
 
-from database.models.base_model import BaseModel
+from .base_model import BaseModel
 
 
 class PriceHistory(BaseModel):
