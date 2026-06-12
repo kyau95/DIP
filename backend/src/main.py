@@ -35,28 +35,28 @@ if __name__ == "__main__":
         # print(play_adapter.scrape(url))
         ret = base.scrape(url)
         
-        # Test insert
-        # When adding a product, have to add the price at the same time 
-        try:
-            product = Product(
-                retailer=retailer_name,
-                product_name=ret["product_name"],
-                product_url=url
-            )
-            db.add(product)
-            db.commit()
-            db.refresh(product)
+        # # Test insert
+        # # When adding a product, have to add the price at the same time 
+        # try:
+        #     product = Product(
+        #         retailer=retailer_name,
+        #         product_name=ret["product_name"],
+        #         product_url=url
+        #     )
+        #     db.add(product)
+        #     db.commit()
+        #     db.refresh(product)
 
-            ph = PriceHistory(
-                price=ret["price"],
-                product_id=product.id,
-                currency="usd",
-            )
-            db.add(ph)
-            db.commit()
-            db.refresh(ph)
-        except Exception as e:
-            print(e)
+        #     ph = PriceHistory(
+        #         price=ret["price"],
+        #         product_id=product.id,
+        #         currency="usd",
+        #     )
+        #     db.add(ph)
+        #     db.commit()
+        #     db.refresh(ph)
+        # except Exception as e:
+        #     print(e)
         
     # Test select
     stmt = select(Product)
