@@ -43,21 +43,32 @@ if __name__ == "__main__":
                 product_name=ret["product_name"],
                 product_url=url
             )
-            ph = PriceHistory(
-                
-            )
             db.add(product)
             db.commit()
-            db.refresh()
+            db.refresh(product)
+
+            ph = PriceHistory(
+                price=ret["price"],
+                product_id=product.id,
+                currency="usd",
+            )
+            db.add(ph)
+            db.commit()
+            db.refresh(ph)
         except Exception as e:
             print(e)
         
     # Test select
-    stmts = select(Product)
-    products = db.scalars(stmts).all()
+    stmt = select(Product)
+    products = db.scalars(stmt).all()
     
     for p in products:
         print(p)
         
+    stmt = select(PriceHistory)
+    phs = db.scalars(stmt).all()
+    
+    for ph in phs:
+        print(ph)
     
     db.close()

@@ -44,3 +44,9 @@ class PriceHistory(BaseModel):
         default=datetime.utcnow,
         nullable=False,
     )
+
+    def __repr__(self) -> str:
+        return (
+            f"Price for {self.product_id}"
+            f"  ${self.price}"
+        )

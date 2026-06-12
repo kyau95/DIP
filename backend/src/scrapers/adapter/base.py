@@ -20,6 +20,7 @@ class BaseAdapater:
         ]
         # Price regex pattern supporting $, €, £ and various formats
         self.price_pattern = r"[$€£]\s*\d+(?:[.,]\d{2})?|\d+(?:[.,]\d{2})?(?:\s*[$€£])"
+        self.currency_symbols = r"[\$€£¥]"
 
     def _find_price_element(self, soup: BeautifulSoup) -> str | None:
         """
@@ -74,6 +75,7 @@ class BaseAdapater:
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
             price = self._find_price_element(soup)
+            price = re.sub(self.currency_symbols, "", price)
             product_name = self._find_product_name(soup)
             return {
                 "url": url,
