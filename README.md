@@ -15,7 +15,13 @@ Attach a UI to it, React or Svelte (idk which one yet). React if basic, Svelte f
 
 Containerize the project in Docker for consistent environments.
 
+Your `.env` file needs to contain the `DB_URL` and a `DEBUG` flag 
 
+Example `.env` config
+```conf
+DB_URL=postgresql+psycopg://postgres:<db pass></db>@localhost:<port>/<database name>
+DEBUG=0
+```
 
 ---
 
