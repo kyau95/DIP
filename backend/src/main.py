@@ -12,7 +12,7 @@ from database.models import Product, PriceHistory
 from database import SessionLocal
 
 from fastapi import FastAPI
-from fastapi.middleware import CORSMiddleware
+from fastapi.middleware.cors import CORSMiddleware
 from api.routes.products import router as product_router
 
 if __name__ == "__main__":
