@@ -5,3 +5,4 @@ bs4
 dotenv
 SQLAlchemy >= 2.0
 psycopg[binary] >= 3.0
+pydantic
