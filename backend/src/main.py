@@ -15,25 +15,24 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.routes.products import router as product_router
 
+app = FastAPI()
+    
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173"
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(
+    product_router,
+    prefix="/api"
+)
+
 if __name__ == "__main__":
-    app = FastAPI()
-    
-    app.add_middleware(
-        CORSMiddleware,
-        allow_origins=[
-            "http://localhost:5173"
-        ],
-        allow_credentials=True,
-        allow_methods=["*"],
-        allow_headers=["*"],
-    )
-    
-    app.include_router(
-        product_router,
-        prefix="/api"
-    )
-
-
     base = BaseAdapater()
     play_adapter = PlaywrightAdapter()
     urls = [
