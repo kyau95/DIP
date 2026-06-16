@@ -29,7 +29,7 @@
 		cursor: pointer;
 		display: inline-block;
 		vertical-align: middle;
-		color: #525151;
+		color: #569ae7;
 	}
 
 	svg:hover {
