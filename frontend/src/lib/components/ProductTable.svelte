@@ -25,9 +25,11 @@
 
 <style>
   table {
-    border: 1px solid;
-    border-collapse: collapse;
-    padding: 10px;
+    border: 2px solid;
+    border-radius: var(--default-border-radius);
+    border-collapse: separate;
+    border-spacing: 0;
+
     text-align: center;
     font-size: 1em;
     min-width: 800px;

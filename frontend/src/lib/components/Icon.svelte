@@ -1,4 +1,9 @@
-<a href="https://example.com" target="_blank">
+<script lang="ts">
+	const props = $props();
+	const url = $derived(props.url)
+</script>
+
+<a href={url} target="_blank">
 	<svg
 		xmlns="http://w3.org"
 		viewBox="0 0 32 32"
@@ -29,7 +34,7 @@
 	}
 
 	svg:hover {
-		color: #111827; /* Darker icon color */
+		color: #111827;
 	}
 
 	svg:active {
