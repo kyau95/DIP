@@ -2,7 +2,10 @@
   import Icon from "./Icon.svelte";
   const props = $props();
   const data = $derived(props.data);
+  const currencySymbol = $derived(props.currency);
 </script>
+
+<!-- TODO: Take in an image URL, user can hover over the product name column and see the item-->
 
 {#if props.isHeader}
   <tr>
@@ -15,7 +18,7 @@
       {data["productName"]}
       <Icon url={data["url"]} />
     </td>
-    <td>{data["price"]}</td>
+    <td>{currencySymbol}{data["price"]}</td>
   </tr>
 {/if}
 

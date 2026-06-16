@@ -17,8 +17,9 @@ def get_products():
     return [
         {
             "id": 1,
-            "name": "RTX 5090",
+            "productName": "RTX 5090",
             "price": 549.99,
+            "url": "https://example.com",
             "currency": "$"
         }
     ]
