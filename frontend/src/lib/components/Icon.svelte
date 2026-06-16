@@ -1,6 +1,5 @@
 <script lang="ts">
-	const props = $props();
-	const url = $derived(props.url)
+	const { url = "https://example.com" } = $props();
 </script>
 
 <a href={url} target="_blank">

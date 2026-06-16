@@ -5,25 +5,56 @@
       id: 1,
       productName: "Audio-Technica ATH-WP900 On-Ear Headphones (Flamed Maple)",
       price: "$699.00",
+      url: "https://www.target.com/p/audio-technica-ath-wp900-on-ear-headphones-flamed-maple/-/A-1001263584#lnk=sametab"
     },
     {
       id: 2,
-      productName: "RTX 5090",
-      price: "$599.99",
+      productName: "MSI Ventus GeForce RTX 5060 Ti 8GB GDDR7 PCI Express® Gen 5 x16 (uses x8) ATX Graphics Card RTX 5060 Ti 8G VENTUS 3X OC",
+      price: "$419.99",
+      url: "https://www.newegg.com/msi-rtx-5060-ti-8g-ventus-3x-oc-geforce-rtx-5060-ti-8gb-graphics-card-triple-fans/p/N82E16814982007"
     },
   ];
 </script>
 
-<table>
-  <tbody>
-    <ProductRow isHeader={true} />
-    {#each data as item (item.id)}
-      <ProductRow isHeader={false} data={item} />
-    {/each}
-  </tbody>
-</table>
+<div>
+  <div class="button-row">
+    <button>Add new item</button>
+  </div>
+
+  <table>
+    <tbody>
+      <ProductRow isHeader={true} />
+      {#each data as item (item.id)}
+        <ProductRow isHeader={false} data={item} />
+      {/each}
+    </tbody>
+  </table>
+</div>
 
 <style>
+  .button-row {
+    width: 100%;
+    height: 48px;
+  }
+  
+  button {
+    float: right;
+    padding: 5px 25px;
+    border-radius: var(--default-border-radius);
+    cursor: pointer;
+    
+    font-size: 1em;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+
+  button:hover {
+    background-color: #c0c0c025;
+  }
+
+  button:active {
+    transform: scale(0.99);
+  }
+
   table {
     border: 2px solid;
     border-radius: var(--default-border-radius);
