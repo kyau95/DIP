@@ -37,47 +37,53 @@ for router in [product_router, price_history_router]:
 
 if __name__ == "__main__":
     base = BaseAdapater()
-    play_adapter = PlaywrightAdapter()
+    play_adapter = PlaywrightAdapter(False)
     urls = [
         # "https://www.everlane.com/products/womens-court-sneaker-white-grass-green?variant=42973788078166",
         # "https://www.newegg.com/msi-rtx-5060-ti-8g-ventus-3x-oc-geforce-rtx-5060-ti-8gb-graphics-card-triple-fans/p/N82E16814982007",
         # "https://www.walmart.com/ip/GameSir-T7-Wired-Controller-Xbox-Series-X-S-Xbox-One-Windows-10-11-Plug-Play-Gaming-Gamepad-Hall-Effect-Joysticks-Hall-Trigger-White-Version/9374812633?classType=VARIANT&adsRedirect=true",
-        # "https://www.target.com/p/audio-technica-ath-wp900-on-ear-headphones-flamed-maple/-/A-1001263584#lnk=sametab"
+        # "https://www.target.com/p/audio-technica-ath-wp900-on-ear-headphones-flamed-maple/-/A-1001263584#lnk=sametab",
+        # "https://www.bestbuy.com/product/apple-airpods-pro-3-wireless-active-noise-cancelling-earbuds-with-heart-rate-sensing-feature-white/JJGCQLYK5F",
+        # "https://www.amazon.com/NZXT-C850-Gold-Core-Cybenetics/dp/B0FQ69SSM9/?_encoding=UTF8&pd_rd_w=Kcplu&content-id=amzn1.sym.a9c4acee-9ca0-46be-bae3-532a2b4b0d29%3Aamzn1.symc.5a16118f-86f0-44cd-8e3e-6c5f82df43d0&pf_rd_p=a9c4acee-9ca0-46be-bae3-532a2b4b0d29&pf_rd_r=GGCN2HXQSHT2BJY4P21Z&pd_rd_wg=g0HZf&pd_rd_r=c65afec5-3650-49a8-af40-79e0c4d9c43a",
+        "https://shop.lululemon.com/p/unisex-find-your-balance-grip-quarter-socks/bp9lb8d0oa?color=33454",
     ]
     
-    # db = SessionLocal()
+    db = SessionLocal()
     
-    # for url in urls:
-    #     retailer_name = urlparse(url).hostname.split(".")[1]
-    #     print(retailer_name)
+    for url in urls:
+        retailer_name = urlparse(url).hostname.split(".")[1]
+        print(retailer_name)
                 
-        # print(play_adapter.scrape(url))
+        ret = play_adapter.scrape(url)
         # ret = base.scrape(url)
+        print(ret)
         
-        # # Test insert
-        # # When adding a product, have to add the price at the same time 
-        # try:
-        #     product = Product(
-        #         retailer=retailer_name,
-        #         product_name=ret["product_name"],
-        #         product_url=url
-        #     )
-        #     db.add(product)
-        #     db.commit()
-        #     db.refresh(product)
+        # Test insert
+        if ret["price"] is not None:
+            try:
+                product = Product(
+                    retailer=retailer_name,
+                    product_name=ret["product_name"],
+                    product_url=url
+                )
+                db.add(product)
+                db.commit()
+                db.refresh(product)
 
-        #     ph = PriceHistory(
-        #         price=ret["price"],
-        #         product_id=product.id,
-        #         currency="usd",
-        #     )
-        #     db.add(ph)
-        #     db.commit()
-        #     db.refresh(ph)
-        # except Exception as e:
-        #     print(e)
+                ph = PriceHistory(
+                    price=ret["price"],
+                    product_id=product.id,
+                    currency=ret["currency"],
+                )
+                db.add(ph)
+                db.commit()
+                db.refresh(ph)
+            except Exception as e:
+                print(e)
+        else:
+            print("Failed to scrape price")
         
-    # # Test select
+    # Test select
     # stmt = select(Product)
     # products = db.scalars(stmt).all()
     
@@ -90,4 +96,4 @@ if __name__ == "__main__":
     # for ph in phs:
     #     print(ph)
     
-    # db.close()
+    db.close()

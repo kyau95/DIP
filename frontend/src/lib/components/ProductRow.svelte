@@ -4,7 +4,9 @@
   const props = $props();
   const data = $derived(props.data);
   const currencySymbol: string = $derived(props.currency || "$");
-  const price: string = $derived(data ? `${currencySymbol}${data["price"]}` : "");
+  const price: string = $derived(
+    data ? `${currencySymbol}${parseFloat(data["price"]).toFixed(2)}` : ""
+  );
 </script>
 
 <!-- TODO: Take in an image URL, user can hover over the product name column and see the item-->

@@ -75,11 +75,17 @@ class BaseAdapater:
             response.raise_for_status()
             soup = BeautifulSoup(response.text, "html.parser")
             price = self._find_price_element(soup)
-            price = re.sub(self.currency_symbols, "", price)
+            currency = None
+            if price:
+                currency_match = re.search(self.currency_symbols, price)
+                if currency_match:
+                    currency = currency_match.group(0)
+                price = re.sub(self.currency_symbols, "", price).strip()
             product_name = self._find_product_name(soup)
             return {
                 "url": url,
                 "price": price,
+                "currency": currency,
                 "product_name": product_name,
                 "status": "success" if price else "no_price_found",
                 "error": None
@@ -89,6 +95,7 @@ class BaseAdapater:
             return {
                 "url": url,
                 "price": None,
+                "currency": None,
                 "product_name": None,
                 "status": "error",
                 "error": str(e)

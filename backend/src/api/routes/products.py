@@ -13,6 +13,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from database.session import get_db
 from database.models import Product, PriceHistory
+from schemas.product import ProductResponse
 
 router = APIRouter()
 
@@ -45,14 +46,19 @@ async def get_products(db: Session = Depends(get_db)):
     ret = db.execute(stmt).all()
 
     return [
-        {
-            "id": product.id,
-            "productName": product.product_name,
-            "retailer": product.retailer,
-            "productUrl": product.product_url,
-            "price": price,
-            "currency": currency,
-            "imageUrl": product.image_url if product.image_url else "https://example.com",   
-        }
+        ProductResponse(
+            id=product.id,
+            productName=product.product_name,
+            retailer=product.retailer,
+            productUrl=product.product_url,
+            price=price,
+            currency=currency,
+            imageUrl=product.image_url if product.image_url else "https://example.com",
+        )
         for product, price, currency in ret
     ]
+
+    
+@router.post("/products")
+async def post_products(db: Session = Depends(get_db)):
+    pass
