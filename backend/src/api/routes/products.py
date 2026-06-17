@@ -51,8 +51,8 @@ async def get_products(db: Session = Depends(get_db)):
             "retailer": product.retailer,
             "productUrl": product.product_url,
             "price": price,
-            "currency": currency
-            
+            "currency": currency,
+            "imageUrl": product.image_url if product.image_url else "https://example.com",   
         }
         for product, price, currency in ret
     ]
