@@ -13,7 +13,9 @@ from database import SessionLocal
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from api.routes.products import router as product_router
+from api.routes.price_history import router as price_history_router
 
 app = FastAPI()
     
@@ -27,10 +29,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(
-    product_router,
-    prefix="/api"
-)
+for router in [product_router, price_history_router]:
+    app.include_router(
+        router,
+        prefix="/api"
+    )
 
 if __name__ == "__main__":
     base = BaseAdapater()

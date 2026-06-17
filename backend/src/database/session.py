@@ -17,6 +17,12 @@ SessionLocal = sessionmaker(
     autocommit=False,
 )
 
-
-if __name__ == "__main__":
-    pass
+def get_db():
+    db = SessionLocal()
+    
+    try:
+        yield db
+    except Exception:
+        raise
+    finally:
+        db.close()

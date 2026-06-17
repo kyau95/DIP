@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import String, Text, Boolean, DateTime, ForeignKey
+from sqlalchemy import String, Text, Boolean, DateTime, Numeric
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from uuid import UUID, uuid4
 
@@ -46,22 +46,27 @@ class Product(BaseModel):
     
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow,
+        default=datetime.now,
         nullable=False,
     )
     
     updated_at: Mapped[datetime] = mapped_column(
         DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=datetime.now,
+        onupdate=datetime.now,
         nullable=False,
     )
     
-    def __repr__(self) -> str:
-        return (
-            f"Product(\n"
-            f"  Id = {self.id}\n"
-            f"  Name = {self.product_name}\n"
-            f"  Retailer = {self.retailer}\n"
-            f")"
-        )
+    price_history = relationship(
+        "PriceHistory",
+        back_populates="product"
+    )
+    
+    # def __repr__(self) -> str:
+    #     return (
+    #         f"Product(\n"
+    #         f"  Id = {self.id}\n"
+    #         f"  Name = {self.product_name}\n"
+    #         f"  Retailer = {self.retailer}\n"
+    #         f")"
+    #     )

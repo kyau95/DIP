@@ -7,19 +7,52 @@ GET /products/{id}
 DELETE /products/{id}
 """
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy import select
+from sqlalchemy.orm import Session, selectinload
 
+from database.session import get_db
+from database.models import Product, PriceHistory
 
 router = APIRouter()
 
 @router.get("/products")
-def get_products():
+async def get_products(db: Session = Depends(get_db)):
+    latest_price_subquery = (
+        select(
+            PriceHistory.product_id,
+            PriceHistory.price,
+            PriceHistory.currency
+        ).distinct(PriceHistory.product_id)
+        .order_by(
+            PriceHistory.product_id,
+            PriceHistory.scraped_at.desc()
+        ).subquery()
+    )
+    
+    stmt = (
+        select(
+            Product,
+            latest_price_subquery.c.price,
+            latest_price_subquery.c.currency,
+        )
+        .join(
+            latest_price_subquery,
+            Product.id == latest_price_subquery.c.product_id
+        )
+    )
+    
+    ret = db.execute(stmt).all()
+
     return [
         {
-            "id": 1,
-            "productName": "RTX 5090",
-            "price": 549.99,
-            "url": "https://example.com",
-            "currency": "$"
+            "id": product.id,
+            "productName": product.product_name,
+            "retailer": product.retailer,
+            "productUrl": product.product_url,
+            "price": price,
+            "currency": currency
+            
         }
+        for product, price, currency in ret
     ]
