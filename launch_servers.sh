@@ -4,6 +4,11 @@
 
 set -e
 
+if [[ ! -n "$VIRTUAL_ENV" && -d ./venv ]]; then
+    echo "Sourcing virtual env"
+    source ./venv/bin/activate  
+fi
+
 echo "Starting DIP servers..."
 
 # Get the directory where this script is located
