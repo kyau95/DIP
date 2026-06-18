@@ -1,3 +1,6 @@
+"""
+Product DB model
+"""
 from datetime import datetime
 
 from sqlalchemy import String, Text, Boolean, DateTime, Numeric

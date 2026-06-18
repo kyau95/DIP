@@ -7,8 +7,8 @@
 
 <div class="container">
   <AddItemModal bind:showModal />
-  <h1>This is a place holder</h1>
-  <p>Welcome to the page</p>
+  <h1>Sales Tracker</h1>
+  <p>This page is to track the items and scrape new items</p>
   <ProductTable addItemEvent={() => (showModal = true)} />
 </div>
 

@@ -1,4 +1,6 @@
-
+"""
+Pydantic model for products 
+"""
 from pydantic import BaseModel
 from uuid import UUID
 

@@ -9,7 +9,7 @@ DELETE /products/{id}
 
 from fastapi import APIRouter, Depends
 from sqlalchemy import select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 
 from database.session import get_db
 from database.models import Product, PriceHistory
