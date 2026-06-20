@@ -27,34 +27,29 @@
 {/if}
 
 <style>
+  tr {
+    transition: background-color 0.15s ease;
+  }
+
+  tr:hover {
+    background-color: #f8fafc;
+  }
+
   th {
-    background-color: #f2f2f2;
-    color: #333;
-    font-weight: bold;
-    padding: 12px;
-    text-align: center;
-    border-bottom: 2px solid #333333;
-  }
-
-  th:first-child {
-    border-top-left-radius: var(--default-border-radius);
-  }
-
-  th:last-child {
-    border-top-right-radius: var(--default-border-radius);
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    padding: 16px 24px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
   }
 
   td {
-    padding: 12px;
-    border-bottom: 1px solid #cccccc;
+    padding: 16px 24px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #1e293b;
     text-overflow: ellipsis;
     overflow: hidden;
-  }
-
-  /* Column dividers (adds border to all but the last column) */
-  th:not(:last-child),
-  td:not(:last-child) {
-    border-right: 1px solid #cccccc;
   }
 
   /* Removes the bottom border from the very last row */
