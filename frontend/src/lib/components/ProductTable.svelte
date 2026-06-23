@@ -41,12 +41,12 @@
 <style>
   .button-row {
     width: 100%;
-    height: 56px;
+    height: 72px;
   }
 
   button {
     float: right;
-    padding: 10px 32px;
+    padding: 20px 42px;
     border-radius: var(--default-border-radius);
     cursor: pointer;
     border: none;

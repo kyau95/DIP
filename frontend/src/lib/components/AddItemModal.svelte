@@ -97,28 +97,28 @@
 
   .modal-header {
     padding: 24px 24px 16px 24px;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: #0f172a;
     border-bottom: 1px solid #f1f5f9;
   }
 
   .modal-body {
-    padding: 24px;
+    padding: 36px 24px;
     display: flex;
     flex-direction: column;
     gap: 8px;
   }
 
   label {
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 600;
     color: #475569;
   }
 
   input {
     border-radius: var(--default-border-radius);
-    font-size: 0.95rem;
+    font-size: 1rem;
     padding: 10px 14px;
     border: 1px solid #cbd5e1;
     width: 100%;
@@ -145,7 +145,7 @@
 
   button {
     border-radius: var(--default-border-radius);
-    padding: 10px 24px;
+    padding: 12px 32px;
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
