@@ -2,6 +2,7 @@
   import ProductRow from "./ProductRow.svelte";
   import { onMount } from "svelte";
   import { getProducts } from "../api";
+    import AddItemModal from "./AddItemModal.svelte";
 
   interface Product {
     id: string;
@@ -11,18 +12,20 @@
     currency: string;
   }
   let products: Product[] = $state([]);
-  let { addItemEvent } = $props();
+  let showModal = $state(false);
 
   onMount(async () => {
     products = await getProducts();
   });
 </script>
 
+<AddItemModal bind:showModal />
+
 <div>
   <div class="button-row">
     <!-- TODO: Add a search feature -->
     <!-- <textarea placeholder="Search Item..."></textarea> -->
-    <button onclick={addItemEvent}><b>Add New Item</b></button>
+    <button onclick={() => showModal = true}><b>Add New Item</b></button>
   </div>
 
   <table>

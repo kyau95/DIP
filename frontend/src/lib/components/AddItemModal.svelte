@@ -3,16 +3,27 @@
   import Banner from "$lib/components/Banner.svelte";
 
   let { showModal = $bindable() } = $props();
+
   let url = $state("");
   let errorMessage = $state("");
   let successMessage = $state("");
   let isLoading = $state(false);
+
+  const handleKeydown = (event: KeyboardEvent) => {
+    if (showModal && event.key === "Escape") {
+      showModal = false;
+    }
+  }
 </script>
+
+<svelte:window onkeydown={handleKeydown} />
 
 {#if showModal}
   <div class="overlay">
     <div class="modal-panel">
-      <div class="modal-header">Add a New Item</div>
+      <div class="modal-header">
+        Add a New Item
+      </div>
       <Banner {...{ errorMessage, successMessage, isLoading }} />
       <div class="modal-body">
         <label for="url">Product URL</label>
