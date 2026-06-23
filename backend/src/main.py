@@ -6,7 +6,7 @@ import asyncio
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Move these to a separate file when parsing to insert into the DB
-from scrapers.adapter import BaseAdapater, PlaywrightAdapter
+from scrapers.adapter import BaseAdapater, PlaywrightAdapter, EverlaneAdapter
 from sqlalchemy import select
 from urllib.parse import urlparse
 from database.models import Product, PriceHistory
@@ -39,6 +39,7 @@ for router in [product_router, price_history_router]:
 if __name__ == "__main__":
     base = BaseAdapater()
     play_adapter = PlaywrightAdapter(False)
+    e_adapter = EverlaneAdapter(False)
     urls = [
         # "https://www.everlane.com/products/womens-court-sneaker-white-grass-green?variant=42973788078166",
         # "https://www.newegg.com/msi-rtx-5060-ti-8g-ventus-3x-oc-geforce-rtx-5060-ti-8gb-graphics-card-triple-fans/p/N82E16814982007",
@@ -58,8 +59,9 @@ if __name__ == "__main__":
         for url in urls:
             retailer_name = urlparse(url).hostname.split(".")[1]
             # ret = await play_adapter.scrape(url)
-            ret = base.scrape(url)
-            print(ret)
+            # ret = base.scrape(url)
+            # ret = await e_adapter.scrape(url)
+            # print(ret)
             
             # # Test insert
             # if ret["price"] is not None:
@@ -67,7 +69,8 @@ if __name__ == "__main__":
             #         product = Product(
             #             retailer=retailer_name,
             #             product_name=ret["product_name"],
-            #             product_url=url
+            #             product_url=url,
+            #             image_url=ret["image_url"]
             #         )
             #         db.add(product)
             #         db.commit()

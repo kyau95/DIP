@@ -13,7 +13,7 @@
     if (showModal && event.key === "Escape") {
       showModal = false;
     }
-  }
+  };
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
@@ -21,9 +21,7 @@
 {#if showModal}
   <div class="overlay">
     <div class="modal-panel">
-      <div class="modal-header">
-        Add a New Item
-      </div>
+      <div class="modal-header">Add a New Item</div>
       <Banner {...{ errorMessage, successMessage, isLoading }} />
       <div class="modal-body">
         <label for="url">Product URL</label>
