@@ -1,0 +1,1 @@
+PRODUCT_LIST_KEY = "products:list"

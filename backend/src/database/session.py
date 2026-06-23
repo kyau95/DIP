@@ -1,6 +1,6 @@
 from dotenv import dotenv_values
-from .models import Product
 
+from redis import Redis
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -17,6 +17,12 @@ SessionLocal = sessionmaker(
     autocommit=False,
 )
 
+redis_client = Redis(
+    host="localhost",
+    port=6379,
+    decode_responses=True
+)
+
 def get_db():
     db = SessionLocal()
     
@@ -26,3 +32,6 @@ def get_db():
         raise
     finally:
         db.close()
+
+def get_redis():
+    return redis_client

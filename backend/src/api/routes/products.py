@@ -6,21 +6,38 @@ GET /products
 GET /products/{id}
 DELETE /products/{id}
 """
+import json
 
 from fastapi import APIRouter, Depends, HTTPException
+from redis import Redis
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from database.session import get_db
+from cache.keys import PRODUCT_LIST_KEY
+from database.session import get_db, get_redis
 from database.models import Product, PriceHistory
+from errors import PriceNotFoundException, UnsupportedRetailerException
 from schemas.product import ProductCreate, ProductResponse
 from services.scrape_service import create_product
-from errors import PriceNotFoundException, UnsupportedRetailerException
 
 router = APIRouter()
 
 @router.get("/products")
-async def get_products(db: Session = Depends(get_db)):
+async def get_products(
+    db: Session = Depends(get_db),
+    redis: Redis = Depends(get_redis),
+):
+    cached = redis.get(PRODUCT_LIST_KEY)
+    if cached:
+        print("Cache hit")
+        data = json.loads(cached)
+        return [
+            ProductResponse.model_validate(item)
+            for item in data
+        ]
+    else:
+        print("Cache miss")
+
     latest_price_subquery = (
         select(
             PriceHistory.product_id,
@@ -46,8 +63,7 @@ async def get_products(db: Session = Depends(get_db)):
     )
     
     ret = db.execute(stmt).all()
-
-    return [
+    response = [
         ProductResponse(
             id=product.id,
             productName=product.product_name,
@@ -55,22 +71,33 @@ async def get_products(db: Session = Depends(get_db)):
             productUrl=product.product_url,
             price=price,
             currency=currency,
-            imageUrl=product.image_url if product.image_url else "https://example.com",
+            imageUrl=product.image_url 
+                if product.image_url 
+                else "https://example.com",
         )
         for product, price, currency in ret
     ]
+    payload = [
+        p.model_dump(mode="json")
+        for p in response
+    ]
+    redis.set(
+        PRODUCT_LIST_KEY,
+        json.dumps(payload),
+        ex=300,
+    )
+    return response
 
     
 @router.post("/products")
 async def post_products(
         payload: ProductCreate,
         db: Session = Depends(get_db),
+        redis: Redis = Depends(get_redis),
         status_code = 201,
     ):
-    # call the scrape service so that it can scrape the price 
-    # and then send the data back to the frontend if valid
-    # otherwise return an error response to the frontend 
     try:
+        redis.delete(PRODUCT_LIST_KEY)
         return await create_product(str(payload.url), db)
     except ValueError as e:
         raise HTTPException(
