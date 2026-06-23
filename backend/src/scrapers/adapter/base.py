@@ -21,6 +21,7 @@ class BaseAdapater:
         # Price regex pattern supporting $, €, £ and various formats
         self.price_pattern = r"[$€£]\s*\d+(?:[.,]\d{2})?|\d+(?:[.,]\d{2})?(?:\s*[$€£])"
         self.currency_symbols = r"[\$€£¥]"
+        self.image_url_pattern = r"src=\".*\""
 
     def _find_price_element(self, soup: BeautifulSoup) -> str | None:
         """
@@ -61,7 +62,59 @@ class BaseAdapater:
         if elem:
             return elem.get_text().strip()
         return None
+
+    def _find_image_url(self, soup: BeautifulSoup) -> str | None:
+        """
+        Finds the image url for the product
+        This is a very rudimentary implementation though and likely will
+        scrape the incorrect url as it finds the first img tag available
+        from the top of the DOM
+        """
+        elem = soup.find("img")
+        src_url = re.search(self.image_url_pattern, str(elem)).group(0).lstrip("src=//")
+        return src_url.replace("\"", "")
+
+    def _fetch_soup(self, url: str) -> BeautifulSoup:
+        """
+        Fetches the HTML content from the URL and returns a parsed BeautifulSoup object.
+        """
+        response = requests.get(url, headers=self.header, timeout=10)
+        response.raise_for_status()
+        return BeautifulSoup(response.text, "html.parser")
+
+    def _parse_price(self, price: str | None) -> tuple[str | None, str | None]:
+        """
+        Parses raw price text to extract the numeric price and currency symbol.
+        """
+        if not price:
+            return None, None
         
+        currency = None
+        currency_match = re.search(self.currency_symbols, price)
+        if currency_match:
+            currency = currency_match.group(0)
+        
+        cleaned_price = re.sub(self.currency_symbols, "", price).strip()
+        return cleaned_price, currency
+
+    def _extract_data(self, soup: BeautifulSoup, url: str) -> dict:
+        """
+        Extracts product name, price, currency, and image URL from the parsed BeautifulSoup soup.
+        """
+        raw_price = self._find_price_element(soup)
+        price, currency = self._parse_price(raw_price)
+        image_url = self._find_image_url(soup)
+        product_name = self._find_product_name(soup)
+        
+        return {
+            "url": url,
+            "image_url": image_url,
+            "price": price,
+            "currency": currency,
+            "product_name": product_name,
+            "status": "success" if price else "no_price_found",
+            "error": None
+        }
 
     def scrape(self, url: str) -> dict:
         """
@@ -71,29 +124,13 @@ class BaseAdapater:
             Returns a dictionary with price, status, and error information.
         """
         try:
-            response = requests.get(url, headers=self.header, timeout=10)
-            response.raise_for_status()
-            soup = BeautifulSoup(response.text, "html.parser")
-            price = self._find_price_element(soup)
-            currency = None
-            if price:
-                currency_match = re.search(self.currency_symbols, price)
-                if currency_match:
-                    currency = currency_match.group(0)
-                price = re.sub(self.currency_symbols, "", price).strip()
-            product_name = self._find_product_name(soup)
-            return {
-                "url": url,
-                "price": price,
-                "currency": currency,
-                "product_name": product_name,
-                "status": "success" if price else "no_price_found",
-                "error": None
-            }
+            soup = self._fetch_soup(url)
+            return self._extract_data(soup, url)
         except requests.RequestException as e:
             print(f"Error scraping {url}: {e}")
             return {
                 "url": url,
+                "image_url": None,
                 "price": None,
                 "currency": None,
                 "product_name": None,
