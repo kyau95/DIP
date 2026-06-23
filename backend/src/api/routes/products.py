@@ -29,14 +29,11 @@ async def get_products(
 ):
     cached = redis.get(PRODUCT_LIST_KEY)
     if cached:
-        print("Cache hit")
         data = json.loads(cached)
         return [
             ProductResponse.model_validate(item)
             for item in data
         ]
-    else:
-        print("Cache miss")
 
     latest_price_subquery = (
         select(
