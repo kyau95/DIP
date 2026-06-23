@@ -20,7 +20,7 @@ class PriceHistory(BaseModel):
     
     product_id: Mapped[UUID] = mapped_column(
         PG_UUID(as_uuid=True),
-        ForeignKey("products.id"),
+        ForeignKey("products.id", ondelete="CASCADE"),
         nullable=False,
     )
     

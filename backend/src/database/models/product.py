@@ -62,7 +62,8 @@ class Product(BaseModel):
     
     price_history = relationship(
         "PriceHistory",
-        back_populates="product"
+        back_populates="product",
+        cascade="all, delete-orphan"
     )
     
     # def __repr__(self) -> str:

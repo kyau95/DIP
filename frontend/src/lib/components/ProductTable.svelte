@@ -24,7 +24,7 @@
 <div>
   <div class="button-row">
     <!-- TODO: Add a search feature -->
-    <!-- <textarea placeholder="Search Item..."></textarea> -->
+    <!-- <input placeholder="Search Item..."></input> -->
     <button onclick={() => showModal = true}><b>Add New Item</b></button>
   </div>
 
