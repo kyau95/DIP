@@ -91,7 +91,15 @@ class PlaywrightAdapter(BaseAdapater):
         """
         Attempts to extract the image URL from img tags.
         """
-        return None
+        img_url = None
+        try:
+            img_locator = page.locator("img")
+            if await img_locator.count() > 0:
+                img_url = await img_locator.first.get_attribute("src")
+                return img_url
+        except Exception as e:
+            print(f"Failed to find image url: {str(e)[:50]}")
+        return img_url
 
     async def _dump_debug_info(self, page):
         """
