@@ -36,9 +36,13 @@ export const postProductUrl = async (url: string) => {
         }
     )
 
+    const data = await resp.json()
+
     if (!resp.ok) {
-        throw new Error("Failed to add product");
+        throw new Error(
+            data.detail ?? "Failed to add product"
+        );
     }
 
-    return await resp.json();
+    return data;
 }

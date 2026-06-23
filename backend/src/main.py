@@ -1,5 +1,6 @@
 import sys
 import os
+import asyncio
 
 # Add src directory to Python path before imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -50,39 +51,41 @@ if __name__ == "__main__":
     
     db = SessionLocal()
     
-    for url in urls:
-        retailer_name = urlparse(url).hostname.split(".")[1]
-        print(retailer_name)
-                
-        ret = play_adapter.scrape(url)
-        # ret = base.scrape(url)
-        print(ret)
-        
-        # Test insert
-        if ret["price"] is not None:
-            try:
-                product = Product(
-                    retailer=retailer_name,
-                    product_name=ret["product_name"],
-                    product_url=url
-                )
-                db.add(product)
-                db.commit()
-                db.refresh(product)
+    async def main():
+        for url in urls:
+            retailer_name = urlparse(url).hostname.split(".")[1]
+            print(retailer_name)
+                    
+            ret = await play_adapter.scrape(url)
+            # ret = base.scrape(url)
+            print(ret)
+            
+            # Test insert
+            if ret["price"] is not None:
+                try:
+                    product = Product(
+                        retailer=retailer_name,
+                        product_name=ret["product_name"],
+                        product_url=url
+                    )
+                    db.add(product)
+                    db.commit()
+                    db.refresh(product)
 
-                ph = PriceHistory(
-                    price=ret["price"],
-                    product_id=product.id,
-                    currency=ret["currency"],
-                )
-                db.add(ph)
-                db.commit()
-                db.refresh(ph)
-            except Exception as e:
-                print(e)
-        else:
-            print("Failed to scrape price")
-        
+                    ph = PriceHistory(
+                        price=ret["price"],
+                        product_id=product.id,
+                        currency=ret["currency"],
+                    )
+                    db.add(ph)
+                    db.commit()
+                    db.refresh(ph)
+                except Exception as e:
+                    print(e)
+            else:
+                print("Failed to scrape price")
+    
+    asyncio.run(main())
     # Test select
     # stmt = select(Product)
     # products = db.scalars(stmt).all()

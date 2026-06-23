@@ -79,6 +79,25 @@ scrape_jobs
 
 
 ### Phase 2: Attach a UI to the app
+Feedback given was to make it more display focused, as you won't remember exactly what items were saved. 
+
+So we want to show cards of the items and the associated price that has been scraped and saved to the UI.
+
+```
+┌───────────┬──────────┐
+│           │          │ 
+│    Image  │   Image  │
+│   Item 1  │  Item 2  │
+│     $$    │   $$$    │
+│           │          │ 
+├───────────┼──────────┤
+│           │          │ 
+│    Image  │   Image  │
+│   Item 3  │  Item 4  │
+│     $$    │   $$$    │
+│           │          │
+└───────────┴──────────┘
+```
 
 ### Phase 3: Containerize it in Docker
 

@@ -1,20 +1,21 @@
 <script lang="ts">
   import { postProductUrl } from "$lib/api";
+  import Banner from "$lib/components/Banner.svelte";
 
   let { showModal = $bindable() } = $props();
   let url = $state("");
+  let errorMessage = $state("");
+  let successMessage = $state("");
+  let isLoading = $state(false);
 </script>
 
 {#if showModal}
   <div class="overlay">
     <div class="modal-panel">
-      <div class="modal-header">
-        Add a New Item
-        <hr />
-      </div>
+      <div class="modal-header">Add a New Item</div>
+      <Banner {...{ errorMessage, successMessage, isLoading }} />
       <div class="modal-body">
         <label for="url">Product URL</label>
-        <br />
         <input
           autocomplete="off"
           type="text"
@@ -22,7 +23,6 @@
           placeholder="https://example.com"
           bind:value={url}
         />
-        <hr />
       </div>
       <div class="modal-footer">
         <button class="cancel" onclick={() => (showModal = false)}
@@ -30,11 +30,25 @@
         >
         <button
           class="active"
-          onclick={() => {
-            console.log(url);
-            // postProductUrl(url);
-            url = "";
-          }}>Add</button
+          onclick={async () => {
+            errorMessage = "";
+            successMessage = "";
+            isLoading = true;
+
+            try {
+              const product = await postProductUrl(url);
+              console.log(product);
+              successMessage = `Added ${product.productName}`;
+              url = "";
+            } catch (err) {
+              errorMessage =
+                err instanceof Error
+                  ? err.message
+                  : "An unknown error occurred";
+            } finally {
+              isLoading = false;
+            }
+          }}>Add Item</button
         >
       </div>
     </div>
@@ -42,18 +56,14 @@
 {/if}
 
 <style>
-  hr {
-    margin-top: 6px;
-    margin-bottom: 0;
-  }
-
   .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(15, 23, 42, 0.3);
+    backdrop-filter: blur(8px);
     z-index: 999;
     display: flex;
     justify-content: center;
@@ -62,35 +72,64 @@
 
   .modal-panel {
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04);
     width: 90%;
-    max-width: 500px;
+    max-width: 480px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #f1f5f9;
   }
 
   .modal-header {
-    padding: 24px 16px 0 16px;
-    font-size: 1.5em;
-    font-weight: bold;
+    padding: 24px 24px 16px 24px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    border-bottom: 1px solid #f1f5f9;
   }
 
   .modal-body {
-    padding: 8px 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
 
-  .modal-footer {
-    padding: 0 16px 20px 16px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+  label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #475569;
   }
 
   input {
     border-radius: var(--default-border-radius);
-    font-size: 1rem;
-    margin: 8px 0;
-    padding: 12px 8px;
-    width: 95%;
+    font-size: 0.95rem;
+    padding: 10px 14px;
+    border: 1px solid #cbd5e1;
+    width: 100%;
+    box-sizing: border-box;
+    outline: none;
+    transition:
+      border-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  }
+
+  .modal-footer {
+    padding: 16px 24px 24px 24px;
+    background-color: #f8fafc;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-top: 1px solid #f1f5f9;
   }
 
   button {
