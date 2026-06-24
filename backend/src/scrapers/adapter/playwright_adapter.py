@@ -7,7 +7,7 @@ class PlaywrightAdapter(BaseAdapater):
     def __init__(self, headless: bool = True):
         super().__init__()
         self.price_selectors = [
-            "//span[contains(text(), '$')] || //div[contains(text(), '$')]",
+            "//span[contains(text(), '$')] | //div[contains(text(), '$')] | //p[contains(text(), '$')]",
             ".price",
             "[class*='price' i]",
             "[class*='Cost']",

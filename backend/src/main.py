@@ -48,9 +48,9 @@ if __name__ == "__main__":
         # "https://www.bestbuy.com/product/apple-airpods-pro-3-wireless-active-noise-cancelling-earbuds-with-heart-rate-sensing-feature-white/JJGCQLYK5F",
         # "https://www.amazon.com/NZXT-C850-Gold-Core-Cybenetics/dp/B0FQ69SSM9/?_encoding=UTF8&pd_rd_w=Kcplu&content-id=amzn1.sym.a9c4acee-9ca0-46be-bae3-532a2b4b0d29%3Aamzn1.symc.5a16118f-86f0-44cd-8e3e-6c5f82df43d0&pf_rd_p=a9c4acee-9ca0-46be-bae3-532a2b4b0d29&pf_rd_r=GGCN2HXQSHT2BJY4P21Z&pd_rd_wg=g0HZf&pd_rd_r=c65afec5-3650-49a8-af40-79e0c4d9c43a",
         # "https://shop.lululemon.com/p/unisex-find-your-balance-grip-quarter-socks/bp9lb8d0oa?color=33454",
-        # "https://www.aritzia.com/us/en/product/etiquette-blazer/118278.html?color=11420",
+        "https://www.aritzia.com/us/en/product/etiquette-blazer/118278.html?color=11420",
         # "https://www.newegg.com/amd-ryzen-7-9000-series-ryzen-7-9800x3d-granite-ridge-zen-5-socket-am5-desktop-cpu-processor/p/N82E16819113877?Item=N82E16819113877",
-        "https://www.everlane.com/products/womens-denim-chore-jacket-2-mid-indigo",
+        # "https://www.everlane.com/products/womens-denim-chore-jacket-2-mid-indigo",
     ]
     
     db = SessionLocal()
@@ -59,9 +59,9 @@ if __name__ == "__main__":
         for url in urls:
             retailer_name = urlparse(url).hostname.split(".")[1]
             # ret = await play_adapter.scrape(url)
-            # ret = base.scrape(url)
+            ret = base.scrape(url)
             # ret = await e_adapter.scrape(url)
-            # print(ret)
+            print(ret)
             
             # # Test insert
             # if ret["price"] is not None:
