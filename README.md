@@ -19,26 +19,29 @@ Your `.env` file needs to contain the `DB_URL` and a `DEBUG` flag
 
 Example `.env` config
 ```conf
-DB_URL=postgresql+psycopg://postgres:<db pass></db>@localhost:<port>/<database name>
+DB_URL=postgresql+psycopg://postgres:<db pass>@localhost:<port>/<database name>
 DEBUG=0
+
+Default DB port is 5432
+DEBUG flag can be any value other than zero to toggle it on and off
 ```
 
 ---
 
 ### Phase 1: Build the Scraper app in Playwright
 ```
-                Scraper Orchestrator
-                        │
-      ┌─────────────────┼─────────────────┐
-      │                 │                 │
-      ▼                 ▼                 ▼
- AmazonAdapter   WalmartAdapter   BestBuyAdapter
+                        Scraper Orchestrator
+                                │
+      ┌────────────────────────────────────────────────────┐
+      │                 │                 │                │
+      ▼                 ▼                 ▼                ▼
+ AmazonAdapter   WalmartAdapter   BestBuyAdapter     DefaultAdapter
  ```
 
 
 ```
                      ┌──────────────┐
-                     │   React UI   │
+                     │  Svelte UI   │
                      └──────┬───────┘
                             │
                             ▼
@@ -79,6 +82,7 @@ scrape_jobs
 
 
 ### Phase 2: Attach a UI to the app
+<<<<<<< Updated upstream
 Feedback given was to make it more display focused, as you won't remember exactly what items were saved. 
 
 So we want to show cards of the items and the associated price that has been scraped and saved to the UI.
@@ -98,6 +102,16 @@ So we want to show cards of the items and the associated price that has been scr
 │           │          │
 └───────────┴──────────┘
 ```
+=======
+We need to setup the FastAPI endpoints for each route
+
+Potential routes:
+- products `<---`
+- price_history `<-- These two are the most important`
+- health
+- alerts
+- scrape_job
+>>>>>>> Stashed changes
 
 ### Phase 3: Containerize it in Docker
 
