@@ -4,7 +4,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class BaseAdapater:
+class BaseAdapter:
     def __init__(self):
         self.header = {
             "User-Agent": (

@@ -1,6 +1,6 @@
 from database.models import Product, PriceHistory
 from schemas.product import ProductResponse
-from scrapers.adapter import BaseAdapater, PlaywrightAdapter
+from scrapers.adapter import *
 
 from errors import PriceNotFoundException, UnsupportedRetailerException
 from sqlalchemy.orm import Session
@@ -14,7 +14,7 @@ async def create_product(
     # Will need to account for dupe URLs in the future
     
     retailer_name = urlparse(url).hostname.split(".")[1]
-    base, pw = BaseAdapater(), PlaywrightAdapter()
+    base, pw = BaseAdapter(), PlaywrightAdapter()
     
     for adapter in [base, pw]:
         if isinstance(adapter, PlaywrightAdapter):
@@ -24,12 +24,11 @@ async def create_product(
         
         if ret["price"] is not None:
             break
-    
-    from pprint import pprint
-    pprint(ret)
 
     if ret["price"] is None:
-        raise PriceNotFoundException()    
+        raise PriceNotFoundException()
+    from pprint import pprint
+    pprint(ret)
     product = Product(
         retailer=retailer_name,
         product_name=ret["product_name"],

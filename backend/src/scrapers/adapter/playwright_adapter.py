@@ -1,9 +1,9 @@
 import re
 
 from playwright.async_api import async_playwright
-from scrapers.adapter.base import BaseAdapater
+from scrapers.adapter.base import BaseAdapter
 
-class PlaywrightAdapter(BaseAdapater):
+class PlaywrightAdapter(BaseAdapter):
     def __init__(self, headless: bool = True):
         super().__init__()
         self.price_selectors = [
@@ -13,6 +13,8 @@ class PlaywrightAdapter(BaseAdapater):
             "[class*='Cost']",
         ]
         self.headless = headless
+        self.img_selector, = "img"
+        self.img_attribute = "src"
     
     async def _setup_browser_and_page(self, playwright, browser_type: str):
         """
@@ -93,9 +95,9 @@ class PlaywrightAdapter(BaseAdapater):
         """
         img_url = None
         try:
-            img_locator = page.locator("img")
+            img_locator = page.locator(self.img_tag)
             if await img_locator.count() > 0:
-                img_url = await img_locator.first.get_attribute("src")
+                img_url = await img_locator.first.get_attribute(self.img_attribute)
                 return img_url
         except Exception as e:
             print(f"Failed to find image url: {str(e)[:50]}")

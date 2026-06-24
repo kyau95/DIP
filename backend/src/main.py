@@ -6,7 +6,7 @@ import asyncio
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 # Move these to a separate file when parsing to insert into the DB
-from scrapers.adapter import BaseAdapater, PlaywrightAdapter, EverlaneAdapter
+from scrapers.adapter import *
 from sqlalchemy import select
 from urllib.parse import urlparse
 from database.models import Product, PriceHistory
@@ -37,7 +37,7 @@ for router in [product_router, price_history_router]:
     )
 
 if __name__ == "__main__":
-    base = BaseAdapater()
+    base = BaseAdapter()
     play_adapter = PlaywrightAdapter(False)
     e_adapter = EverlaneAdapter(False)
     urls = [
