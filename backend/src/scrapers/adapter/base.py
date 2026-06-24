@@ -69,8 +69,10 @@ class BaseAdapter:
         from the top of the DOM
         """
         elem = soup.find("img")
-        src_url = re.search(self.image_url_pattern, str(elem)).group(0).lstrip("src=//")
-        return src_url.replace("\"", "")
+        src_url = re.search(self.image_url_pattern, str(elem))
+        if src_url:
+            src_url = src_url.group(0).lstrip("src=//").replace("\"", "")
+        return src_url
 
     def _fetch_soup(self, url: str) -> BeautifulSoup:
         """

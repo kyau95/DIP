@@ -13,7 +13,7 @@ class PlaywrightAdapter(BaseAdapter):
             "[class*='Cost']",
         ]
         self.headless = headless
-        self.img_selector, = "img"
+        self.img_selector = "img"
         self.img_attribute = "src"
     
     async def _setup_browser_and_page(self, playwright, browser_type: str):
